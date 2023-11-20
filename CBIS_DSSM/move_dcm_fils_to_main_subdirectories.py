@@ -11,10 +11,12 @@ subdirectories = next(os.walk(directory_path))[1]
 # Iterate through each subdirectory
 for subdir in subdirectories:
     subdir_path = os.path.join(directory_path, subdir)
+    print("subdir_path", subdir_path)
     if os.path.isdir(subdir_path):
         # Iterate through sub-subdirectories
         for root, dirs, files in os.walk(subdir_path):
             for file in files:
+                print("file", file)
                 if file.endswith('.dcm'):
                     file_path = os.path.join(root, file)
                     destination = os.path.join(subdir_path, file)
@@ -35,6 +37,18 @@ for subdir in subdirectories:
 #Deleet now empty subdirectories
 # Get a list of all subdirectories in the given directory
 subdirectories = next(os.walk(directory_path))[1]
+
+# Remove subdirectories that don't start with 'Mass'
+# Iterate through the main directory
+for root, dirs, files in os.walk(directory_path):
+    for subdir in dirs:
+        subdir_path = os.path.join(root, subdir)
+        if not subdir.startswith('mass') and not os.listdir(subdir_path):
+            # Remove empty subdirectories
+            shutil.rmtree(subdir_path)
+            print(f"Removed: {subdir_path}")
+
+
 
 # Remove subdirectories that don't start with 'Mass'
 # Iterate through the main directory
