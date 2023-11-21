@@ -7,33 +7,33 @@ import matplotlib.pyplot as plt
 import config
 
 
-def select_path(train_or_test, images_or_masks):
-    #base folder paths
-    input_folder = config.DATASET_PATH
-    output_folder = config.OUTPUT_PATH
-
-    # select the dataset
-    if train_or_test == "train" and images_or_masks == "images":
-        input_folder = os.path.join(input_folder, "train", "images")
-        output_folder = os.path.join(output_folder, "train", "images")
-
-    elif (train_or_test == "test" and images_or_masks == "images"):
-        input_folder = os.path.join(input_folder, "test", "images")
-        output_folder = os.path.join(output_folder, "test", "images")
-
-    elif (train_or_test == "train" and images_or_masks == "masks"):
-        input_folder = os.path.join(input_folder, "train", "masks")
-        output_folder = os.path.join(output_folder, "train", "masks")
-
-    elif (train_or_test == "test" and images_or_masks == "masks"):
-        input_folder = os.path.join(input_folder, "test", "masks")
-        output_folder = os.path.join(output_folder, "test", "masks")
-
-    return input_folder, output_folder
-
-
+# def select_path(train_or_test, images_or_masks):
+#     #base folder paths
+#     input_folder = config.DATASET_PATH
+#     output_folder = config.OUTPUT_PATH
+#
+#     # select the dataset
+#     if train_or_test == "train" and images_or_masks == "images":
+#         input_folder = os.path.join(input_folder, "train", "images")
+#         output_folder = os.path.join(output_folder, "train", "images")
+#
+#     elif (train_or_test == "test" and images_or_masks == "images"):
+#         input_folder = os.path.join(input_folder, "test", "images")
+#         output_folder = os.path.join(output_folder, "test", "images")
+#
+#     elif (train_or_test == "train" and images_or_masks == "masks"):
+#         input_folder = os.path.join(input_folder, "train", "masks")
+#         output_folder = os.path.join(output_folder, "train", "masks")
+#
+#     elif (train_or_test == "test" and images_or_masks == "masks"):
+#         input_folder = os.path.join(input_folder, "test", "masks")
+#         output_folder = os.path.join(output_folder, "test", "masks")
+#
+#     return input_folder, output_folder
+#
+#
 def convert_npy_to_png(input_folder, output_folder):
-    if not os.path.exists(input_folder):
+    if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
     npy_files = [f for f in os.listdir(input_folder) if f.endswith('.npy')]
@@ -47,5 +47,27 @@ def convert_npy_to_png(input_folder, output_folder):
         plt.imsave(os.path.join(output_folder, f"{os.path.splitext(npy_file)[0]}.png"), image_array, cmap='gray')
 
 
-input_folder, output_folder = select_path(train_or_test = "train", images_or_masks = "images")
+# input_folder, output_folder = select_path(train_or_test = "train", images_or_masks = "images")
+
+
+print(os.getcwd())
+cur_dir = os.getcwd()
+input_folder = os.path.join(cur_dir, "data", "preprocessed_data")
+output_folder = os.path.join(cur_dir, "data", "converted_pngs")
+print("input_folder", input_folder)
+print("output_folder", output_folder)
 convert_npy_to_png(input_folder, output_folder)
+
+
+#
+# print(os.getcwd())
+# cur_dir = os.getcwd()
+# base_path = os.path.join(cur_dir, "data/raw_data")
+# output_folder= os.path.join(cur_dir, "data/raw_data/")
+# npy_path = os.path.join(base_path, "Mass-Test_P_00016_LEFT_CC_pad.npy")
+# npy_file = npy_path
+# image_array = np.load(npy_path)
+# # Normalize the pixel values to be in the range of 0 to 1
+# image_array = (image_array - np.min(image_array)) / (np.max(image_array) - np.min(image_array))
+#
+# plt.imsave(os.path.join(output_folder, f"{os.path.splitext(npy_file)[0]}.png"), image_array, cmap='gray')
