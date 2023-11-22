@@ -60,15 +60,15 @@ for a in arr:
 
 
 # Normalise to range [0, 1]
-arr_norm = [MinMaxNormalise(a) for a in arr]
+# arr_norm = [MinMaxNormalise(a) for a in arr]
 
 
 
 # Step 1.1 - Initial crop around the image boundaries
 cropped_img_list = []
 
-for i in range(len(arr_norm)):
-    cropped_img = CropBorders(img=arr_norm[i])
+for i in range(len(arr)):
+    cropped_img = CropBorders(img=arr[i])
     cropped_img_list.append(cropped_img)
 
 
@@ -82,10 +82,10 @@ for i in range(len(arr_norm)):
 # # # Plot binarised images
 # # # fig, ax = plt.subplots(nrows=5, ncols=5, figsize=(22, 25))
 # #
-# for i in range(len(arr_norm)):
+# for i in range(len(arr)):
 #
 #     # Plot binarised images.
-#     th1, th2, th3, th4 = Binarisation(img=arr_norm[i], maxval=1.0, show=False)
+#     th1, th2, th3, th4 = Binarisation(img=arr[i], maxval=1.0, show=False)
 #     th1_list.append(th1)
 #     th2_list.append(th2)
 #     th3_list.append(th3)
@@ -96,7 +96,7 @@ for i in range(len(arr_norm)):
 own_binarised_img_list = []
 
 # Plot binarised images
-for i in range(len(arr_norm)):
+for i in range(len(arr)):
     # Plot own binarised image.
     binarised_img = OwnGlobalBinarise(img=cropped_img_list[i], thresh=0.1, maxval=1.0)
     own_binarised_img_list.append(binarised_img)
@@ -105,7 +105,7 @@ for i in range(len(arr_norm)):
 
 # Step 2.2 - Removing noise from mask
 edited_mask_list = []
-for i in range(len(arr_norm)):
+for i in range(len(arr)):
     edited_mask = OpenMask(mask=own_binarised_img_list[i], ksize=(33, 33), operation="open")
     edited_mask_list.append(edited_mask)
 
@@ -113,7 +113,7 @@ for i in range(len(arr_norm)):
 
 # Step 2.3 - Remove the breast region from the mask
 X_largest_blobs_list = []
-for i in range(len(arr_norm)):
+for i in range(len(arr)):
     _, X_largest_blobs = XLargestBlobs(mask=edited_mask_list[i], top_X=1)
     X_largest_blobs_list.append(X_largest_blobs)
 
@@ -121,7 +121,7 @@ for i in range(len(arr_norm)):
 
 # Step 3.1 - invert mask
 inverted_mask_list = []
-for i in range(len(arr_norm)):
+for i in range(len(arr)):
     inverted_mask = InvertMask(X_largest_blobs_list[i])
     inverted_mask_list.append(inverted_mask)
 
@@ -129,7 +129,7 @@ for i in range(len(arr_norm)):
 # step 3.2 - inpainting
 own_masked_img_list = []
 
-for i in range(len(arr_norm)):
+for i in range(len(arr)):
     # Plot applying largest-blob mask
     masked_img = ApplyMask(img=cropped_img_list[i], mask=X_largest_blobs_list[i])
     own_masked_img_list.append(masked_img)
@@ -138,7 +138,7 @@ for i in range(len(arr_norm)):
 
 # step 3.3 - Orientating the mammograms - Horizontal flip first AFTER removing pectoral muscle
 flipped_img_list = []
-for i in range(len(arr_norm)):
+for i in range(len(arr)):
     # Plot flipped image.
     horizontal_flip = HorizontalFlip(mask=X_largest_blobs_list[i])
     if horizontal_flip:
@@ -152,7 +152,7 @@ for i in range(len(arr_norm)):
 
 # step 3.4 - Contrast-Limited Adaptive Histogram Equalisation (CLAHE)
 clahe_img_list = []
-for i in range(len(arr_norm)):
+for i in range(len(arr)):
     # CLAHE enhancement.
     clahe_img = clahe(img=flipped_img_list[i])
     clahe_img_list.append(clahe_img)
@@ -162,7 +162,7 @@ for i in range(len(arr_norm)):
 
 # Step 4 - Pad into a square
 padded_img_list = []
-for i in range(len(arr_norm)):
+for i in range(len(arr)):
     padded_img = Pad(img=clahe_img_list[i])
     padded_img_list.append(padded_img)
 

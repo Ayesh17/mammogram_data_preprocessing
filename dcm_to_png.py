@@ -65,16 +65,16 @@ def convert_dicom_to_png_CBIS(dicom_folder, png_folder):
 dicom_folder_path_INbreast = os.path.join(config.INBREAST_PATH, "AllDICOMs")
 png_output_folder_path_INbreast = os.path.join(config.INBREAST_PATH, "Converted_PNG")
 
-# for CBID-DDSM
-dicom_folder_path_CBIS = config.CBIS_PATH
-png_output_folder_path_CBIS = os.path.join(config.CBIS_BASE_PATH, "Converted_PNG")
+# # for CBID-DDSM
+# dicom_folder_path_CBIS = config.CBIS_PATH
+# png_output_folder_path_CBIS = os.path.join(config.CBIS_BASE_PATH, "Converted_PNG")
 
 if __name__ == '__main__':
 
-    # # Convert the DICOM file to PNG when using the INbreast datset
-    # convert_dicom_to_png_INbreast(dicom_folder_path_INbreast, png_output_folder_path_INbreast)
+    # Convert the DICOM file to PNG when using the INbreast datset
+    convert_dicom_to_png_INbreast(dicom_folder_path_INbreast, png_output_folder_path_INbreast)
 
-    # Convert the DICOM file to PNG when using the CBIS-DDSM datset
-    convert_dicom_to_png_CBIS(dicom_folder_path_CBIS, png_output_folder_path_CBIS)
+    # # Convert the DICOM file to PNG when using the CBIS-DDSM datset
+    # convert_dicom_to_png_CBIS(dicom_folder_path_CBIS, png_output_folder_path_CBIS)
 
 
