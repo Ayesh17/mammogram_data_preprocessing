@@ -22,7 +22,7 @@ selected_paths = [os.path.join(cbis_path, "Mass-Test_P_00016_LEFT_CC_full", "1-1
                   os.path.join(cbis_path, "Mass-Test_P_00016_LEFT_MLO_full", "1-1.dcm"),
                   os.path.join(cbis_path, "Mass-Test_P_00017_LEFT_CC_full", "1-1.dcm"),
                   os.path.join(cbis_path, "Mass-Test_P_00032_RIGHT_CC_full", "1-1.dcm"),
-                  os.path.join(cbis_path, "Mass-Test_P_00124_RIGHT_CC_full", "1-1.dcm")]
+                  os.path.join(cbis_path, "Mass-Test_P_00116_RIGHT_MLO_full", "1-1.dcm")]
 
 ds = [pydicom.dcmread(selected_paths[i]) for i in range(len(selected_paths))]
 arr = [_ds.pixel_array for _ds in ds]
@@ -33,8 +33,8 @@ mask_paths = [os.path.join(cbis_path, "Mass-Test_P_00016_LEFT_CC_mask_1", "1-1.d
               os.path.join(cbis_path, "Mass-Test_P_00016_LEFT_MLO_mask_1", "1-1.dcm"),
               os.path.join(cbis_path, "Mass-Test_P_00017_LEFT_CC_mask_1", "1-2.dcm"),
               os.path.join(cbis_path, "Mass-Test_P_00032_RIGHT_CC_mask_1", "1-2.dcm"),
-              os.path.join(cbis_path, "Mass-Test_P_00124_RIGHT_CC_mask_1", "1-2.dcm")
-              ]
+              os.path.join(cbis_path, "Mass-Test_P_00116_RIGHT_MLO_mask_1", "1-2.dcm"),
+              os.path.join(cbis_path, "Mass-Test_P_00116_RIGHT_MLO_mask_1", "1-2.dcm")]
 
 ds_masks = [pydicom.dcmread(mask_paths[i]) for i in range(len(mask_paths))]
 arr_masks = [_ds.pixel_array for _ds in ds_masks]
@@ -82,6 +82,18 @@ for i in range(len(arr_masks)):
 
 # ## Understanding the images
 for a in arr:
+    print("Image")
+    print("Shape:", a.shape)
+    print("Dimensions:", a.ndim)
+    print("Type:", type(a))
+    print("Data type:", a.dtype)
+    print(f"min value, max value: {a.min(), a.max()}")
+    print("---")
+
+
+# ## Understanding the images
+for a in arr_masks:
+    print("Mask")
     print("Shape:", a.shape)
     print("Dimensions:", a.ndim)
     print("Type:", type(a))
@@ -163,7 +175,7 @@ fig.suptitle("uint16 to uint8")
 for i in range(len(selected_paths)):
     ax[0][i].imshow(arr[i], cmap="gray")
     ax[0][i].set_title(f"{ds[i].PatientID}")
-    
+
 # Plot uint8
 for i in range(len(selected_paths)):
     ax[1][i].imshow(arr_uint8[i], cmap="gray")
@@ -207,20 +219,35 @@ for a in arr_uint8:
 
 
 cropped_img_list = []
+cropped_msk_list = []
 
-fig, ax = plt.subplots(nrows=2, ncols=len(selected_paths), figsize = (22, 10))
+fig, ax = plt.subplots(nrows=4, ncols=len(selected_paths), figsize = (22, 10))
 
 for i in range(len(arr_norm)):
     
     # Plot original
     ax[0][i].imshow(arr_norm[i], cmap="gray")
     ax[0][i].set_title(f"{ds[i].PatientID}")
-    
+    print("Image Shape:", arr[i].shape)
+
+    ax[2][i].imshow(arr_masks[i], cmap="gray")
+    ax[2][i].set_title(f"{ds[i].PatientID}")
+    print("Mask Shape:", arr_masks[i].shape)
+
     # Plot cropped
     cropped_img = CropBorders(img=arr_norm[i])
     cropped_img_list.append(cropped_img)
+    print("Cropped Image Shape:", cropped_img.shape)
+
     ax[1][i].imshow(cropped_img, cmap="gray")
     ax[1][i].set_title("Cropped image")
+
+    cropped_msk = CropBorders(img=arr_masks[i])
+    cropped_msk_list.append(cropped_msk)
+    print("Cropped Mask Shape:", cropped_msk.shape)
+
+    ax[3][i].imshow(cropped_msk, cmap="gray")
+    ax[3][i].set_title("Cropped mask")
 
     
 plt.tight_layout()
@@ -503,14 +530,18 @@ for i in range(len(own_masked_img_list)):
 
 
 flipped_img_list = []
+flipped_msk_list = []
 
-fig, ax = plt.subplots(nrows=2, ncols=len(arr_norm), figsize=(22, 10))
+fig, ax = plt.subplots(nrows=4, ncols=len(arr_norm), figsize=(22, 10))
 
 for i in range(len(arr_norm)):
     
     # Plot original image.
     ax[0][i].imshow(cropped_img_list[i], cmap="gray")
     ax[0][i].set_title(f"{ds[i].PatientID}")
+
+    ax[2][i].imshow(cropped_msk_list[i], cmap="gray")
+    ax[2][i].set_title(f"{ds[i].PatientID}")
     
 #     # Plot largest-blob mask.
 #     ax[1][i].imshow(X_largest_blobs_list[i], cmap="gray")
@@ -525,11 +556,20 @@ for i in range(len(arr_norm)):
     if horizontal_flip:
         flipped_img = np.fliplr(own_masked_img_list[i])
         flipped_img_list.append(flipped_img)
+
+        flipped_msk = np.fliplr(cropped_msk_list[i])
+        flipped_msk_list.append(flipped_msk)
+
     else:
         flipped_img_list.append(own_masked_img_list[i])
+
+        flipped_msk_list.append(cropped_msk_list[i])
     
     ax[1][i].imshow(flipped_img_list[i], cmap="gray")
     ax[1][i].set_title("Flipped image")
+
+    ax[3][i].imshow(flipped_msk_list[i], cmap="gray")
+    ax[3][i].set_title("Flipped image")
 
 plt.tight_layout()
 plt.savefig(fname=os.path.join(base_path,"flipped.png"), dpi=300)
@@ -610,14 +650,17 @@ for i in range(len(clahe_img_list)):
 
 
 padded_img_list = []
-
-fig, ax = plt.subplots(nrows=2, ncols=len(arr_norm), figsize=(22, 10))
+padded_msk_list = []
+fig, ax = plt.subplots(nrows=4, ncols=len(arr_norm), figsize=(22, 10))
 
 for i in range(len(arr_norm)):
     
     # Plot original image.
     ax[0][i].imshow(cropped_img_list[i], cmap="gray")
     ax[0][i].set_title(f"{ds[i].PatientID}")
+
+    ax[2][i].imshow(flipped_msk_list[i], cmap="gray")
+    ax[2][i].set_title(f"{ds[i].PatientID}")
     
 #     # Plot flipped image.
 #     ax[1][i].imshow(flipped_img_list[i], cmap="gray")
@@ -626,8 +669,15 @@ for i in range(len(arr_norm)):
     # Plot padded image.
     padded_img = Pad(img=clahe_img_list[i])
     padded_img_list.append(padded_img)
+
+    padded_msk = Pad(img=cropped_msk_list[i])
+    padded_msk_list.append(padded_msk)
+
     ax[1][i].imshow(padded_img, cmap="gray")
     ax[1][i].set_title("Padded image")
+
+    ax[3][i].imshow(padded_msk, cmap="gray")
+    ax[3][i].set_title("Padded mask")
 
 plt.tight_layout()
 plt.savefig(fname=os.path.join(base_path,"pad.png"), dpi=300)
