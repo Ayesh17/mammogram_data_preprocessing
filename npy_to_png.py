@@ -49,13 +49,14 @@ def convert_npy_to_png(input_folder, output_folder):
 
 
 # When usingINbreast
-input_folder, output_folder = select_path(train_or_test = "train", images_or_masks = "masks")
+# input_folder, output_folder = select_path(train_or_test = "train", images_or_masks = "masks")
 
 
-# # When using CBIS-DDSm
-# cur_dir = os.getcwd()
-# input_folder = os.path.join(cur_dir, "data", "preprocessed_data")
-# output_folder = os.path.join(cur_dir, "data", "converted_pngs")
+# When using CBIS-DDSm
+cur_dir = os.getcwd()
+print("cur_dir",cur_dir)
+input_folder = os.path.join(cur_dir, "data", "preprocessed_data")
+output_folder = os.path.join(cur_dir, "data", "converted_pngs")
 
 
 convert_npy_to_png(input_folder, output_folder)

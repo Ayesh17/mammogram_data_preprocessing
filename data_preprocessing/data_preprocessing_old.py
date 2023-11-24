@@ -18,7 +18,7 @@ import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("device", device)
 
-for i in range(10):
+for i in range(1):
     # cbis_path = f"{config.CBIS_PATH}_{i+1}"
     cbis_path = config.CBIS_PATH
     print("cbis_path", cbis_path)
@@ -30,6 +30,7 @@ for i in range(10):
 
     if not os.path.exists(output_path_masks):
         os.makedirs(output_path_masks)
+
 
     # Initialize empty lists to store image and mask paths
     print("Initializing paths")
@@ -161,7 +162,7 @@ for i in range(10):
 
 
     # step 3.3 - Orientating the mammograms - Horizontal flip first AFTER removing pectoral muscle
-    print("preprocessing Data")
+    print("Horizontal flipping")
     flipped_img_list = []
     flipped_msk_list = []
     padded_img_list = []
@@ -205,8 +206,71 @@ for i in range(10):
             preprocessed_msk_list.append(padded_msk)  # preprocessed_msk_list
 
 
+    # # step 3.3 - Orientating the mammograms - Horizontal flip first AFTER removing pectoral muscle
+    # print("Horizontal flipping")
+    # flipped_img_list = []
+    # flipped_msk_list = []
+    #
+    # for i in range(len(arr)):
+    #     # Plot flipped image.
+    #     horizontal_flip = HorizontalFlip(mask=X_largest_blobs_list[i])
+    #     if horizontal_flip:
+    #         flipped_img = np.fliplr(own_masked_img_list[i])
+    #         flipped_img_list.append(flipped_img)
+    #
+    #     else:
+    #         flipped_img_list.append(own_masked_img_list[i])
+    #
+    #
+    #
+    # for i in range(len(arr_masks)):
+    #     # Plot flipped image.
+    #     horizontal_flip = HorizontalFlip(mask=cropped_msk_list[i])
+    #     if horizontal_flip:
+    #         flipped_msk = np.fliplr(cropped_msk_list[i])
+    #         flipped_msk_list.append(flipped_msk)
+    #
+    #     else:
+    #         flipped_msk_list.append(cropped_msk_list[i])
 
-    # Step 4 - Resize all images in the padded_img_list to 256x256x3
+
+    #
+    # # step 3.4 - Contrast-Limited Adaptive Histogram Equalisation (CLAHE)
+    # print("CLAHE")
+    # clahe_img_list = []
+    # for i in range(len(arr)):
+    #     # CLAHE enhancement.
+    #     clahe_img = clahe(img=flipped_img_list[i])
+    #     clahe_img_list.append(clahe_img)
+
+
+
+
+    # # Step 4 - Padding into a square
+    # print("Padding")
+    # padded_img_list = flipped_img_list
+    # padded_msk_list = flipped_msk_list
+
+
+    # # Step 4 - Padding into a square
+    # print("Padding")
+    # padded_img_list = []
+    # padded_msk_list = []
+    # # for i in range(len(arr)):
+    # #     padded_img = Pad(img=flipped_img_list[i])
+    # #     padded_img_list.append(padded_img)
+    #
+    # for i in range(len(arr)):
+    #     padded_img = Pad(img=clahe_img_list[i])
+    #     padded_img_list.append(padded_img)
+    #
+    # for i in range(len(arr_masks)):
+    #     padded_msk = Pad(img=flipped_msk_list[i])
+    #     padded_msk_list.append(padded_msk)
+
+
+
+    # Step 5 - Resize all images in the padded_img_list to 256x256x3
     print("Resizing")
     resized_img_list = []
     resized_msk_list = []
@@ -221,8 +285,8 @@ for i in range(10):
         resized_msk_list.append(resized_msk)
 
 
-
-    # Step 5 - Generate outputs
+    #
+    # # Step 6 - Generate outputs
     print("Generating outputs")
 
     # if want the output in png format
@@ -327,7 +391,7 @@ for i in range(10):
         np.save(save_path, img)
 
 
-    # 6 Plotting
+    # Plotting
     # print("Plotting")
     # fig, ax = plt.subplots(nrows=5, ncols=len(arr), figsize=(22, 10))
     #

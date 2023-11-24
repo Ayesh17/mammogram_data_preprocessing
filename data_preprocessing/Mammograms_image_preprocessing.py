@@ -555,13 +555,16 @@ for i in range(len(arr_norm)):
     horizontal_flip = HorizontalFlip(mask=X_largest_blobs_list[i])
     if horizontal_flip:
         flipped_img = np.fliplr(own_masked_img_list[i])
-        flipped_img_list.append(flipped_img)
+        padded_img = Pad(img=flipped_img)
+        reflipped_img = np.fliplr(padded_img)
+        flipped_img_list.append(reflipped_img)
 
         flipped_msk = np.fliplr(cropped_msk_list[i])
         flipped_msk_list.append(flipped_msk)
 
     else:
-        flipped_img_list.append(own_masked_img_list[i])
+        padded_img = Pad(img=own_masked_img_list[i])
+        flipped_img_list.append(padded_img)
 
         flipped_msk_list.append(cropped_msk_list[i])
     
@@ -573,6 +576,7 @@ for i in range(len(arr_norm)):
 
 plt.tight_layout()
 plt.savefig(fname=os.path.join(base_path,"flipped.png"), dpi=300)
+
 
 
 # In[47]:
@@ -592,47 +596,47 @@ for i in range(len(flipped_img_list)):
 
 
 
-
-# In[49]:
-
-
-clahe_img_list = []
-
-fig, ax = plt.subplots(nrows=2, ncols=len(arr_norm), figsize=(22, 10))
-
-for i in range(len(arr_norm)):
-    
-    # Plot original image.
-    ax[0][i].imshow(flipped_img_list[i], cmap="gray")
-    ax[0][i].set_title(f"{ds[i].PatientID}")
-    
-#     # Plot largest-blob mask.
-#     ax[1][i].imshow(X_largest_blobs_list[i], cmap="gray")
-#     ax[1][i].set_title("Largest blob")
-    
-#     # Plot final image.
-#     ax[2][i].imshow(final_result_1_list[i], cmap="gray")
-#     ax[2][i].set_title("FINAL RESULT")
-    
-    # CLAHE enhancement.
-    clahe_img = clahe(img=flipped_img_list[i])
-    clahe_img_list.append(clahe_img)
-    
-    ax[1][i].imshow(clahe_img_list[i], cmap="gray")
-    ax[1][i].set_title("CLAHE image")
-
-plt.tight_layout()
-plt.savefig(fname=os.path.join(base_path,"clahe.png"), dpi=300)
-
-
-# In[50]:
-
-
-# Plot individually
-for i in range(len(clahe_img_list)):
-    save_path = os.path.join(os.path.join(base_path,"8_clahe"), f"{ds[i].PatientID}_clahe.png")
-    cv2.imwrite(filename=save_path, img=clahe_img_list[i])
-
+#
+# # In[49]:
+#
+#
+# clahe_img_list = []
+#
+# fig, ax = plt.subplots(nrows=2, ncols=len(arr_norm), figsize=(22, 10))
+#
+# for i in range(len(arr_norm)):
+#
+#     # Plot original image.
+#     ax[0][i].imshow(flipped_img_list[i], cmap="gray")
+#     ax[0][i].set_title(f"{ds[i].PatientID}")
+#
+# #     # Plot largest-blob mask.
+# #     ax[1][i].imshow(X_largest_blobs_list[i], cmap="gray")
+# #     ax[1][i].set_title("Largest blob")
+#
+# #     # Plot final image.
+# #     ax[2][i].imshow(final_result_1_list[i], cmap="gray")
+# #     ax[2][i].set_title("FINAL RESULT")
+#
+#     # CLAHE enhancement.
+#     clahe_img = clahe(img=flipped_img_list[i])
+#     clahe_img_list.append(clahe_img)
+#
+#     ax[1][i].imshow(clahe_img_list[i], cmap="gray")
+#     ax[1][i].set_title("CLAHE image")
+#
+# plt.tight_layout()
+# plt.savefig(fname=os.path.join(base_path,"clahe.png"), dpi=300)
+#
+#
+# # In[50]:
+#
+#
+# # Plot individually
+# for i in range(len(clahe_img_list)):
+#     save_path = os.path.join(os.path.join(base_path,"8_clahe"), f"{ds[i].PatientID}_clahe.png")
+#     cv2.imwrite(filename=save_path, img=clahe_img_list[i])
+#
 
 # ---
 # 
@@ -667,7 +671,7 @@ for i in range(len(arr_norm)):
 #     ax[1][i].set_title("Flipped image")
     
     # Plot padded image.
-    padded_img = Pad(img=clahe_img_list[i])
+    padded_img = Pad(img=flipped_img_list[i])
     padded_img_list.append(padded_img)
 
     padded_msk = Pad(img=cropped_msk_list[i])
@@ -700,3 +704,11 @@ for i in range(len(padded_img_list)):
 #     np.save(save_path, img)
 
 
+    ax[1][i].imshow(padded_img_list[i], cmap="gray")
+    ax[1][i].set_title("Padded image")
+
+    ax[3][i].imshow(padded_msk_list[i], cmap="gray")
+    ax[3][i].set_title("Padded mask")
+
+plt.tight_layout()
+plt.savefig(fname=os.path.join(base_path, "pad.png"), dpi=300)
