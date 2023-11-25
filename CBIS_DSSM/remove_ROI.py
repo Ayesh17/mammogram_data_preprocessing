@@ -2,7 +2,6 @@ import os
 
 import config
 
-
 def remove_larger_dcm(dicom_folder):
     for root, dirs, files in os.walk(dicom_folder):
         for dir_name in dirs:
