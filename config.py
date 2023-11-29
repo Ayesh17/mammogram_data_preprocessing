@@ -11,5 +11,6 @@ INBREAST_PATH =  os.path.abspath('E:\Ayesh\Datasets\INbreast')
 
 #CBIS-DDSm path
 # CBIS_PATH =  os.path.abspath('C:\Dataset\CBIS-DDSM\Data')
-CBIS_PATH =  os.path.abspath('E:\Ayesh\Datasets\CBIS-DDSM\Data1\Data')
+# CBIS_PATH =  os.path.abspath('E:\Ayesh\Datasets\CBIS-DDSM\Data1\Data')
+CBIS_PATH =  os.path.abspath('E:\Ayesh\Datasets\CBIS-DDSM\Data_subset')
 CBIS_BASE_PATH =  os.path.abspath('E:\Ayesh\Datasets\CBIS-DDSM')

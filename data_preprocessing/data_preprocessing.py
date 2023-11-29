@@ -21,8 +21,8 @@ print("device", device)
 
 for i in range(33):
     print("Batch: ", i)
-    # cbis_path = config.CBIS_PATH
-    cbis_path = f"{config.CBIS_PATH}_{i + 1}"
+    cbis_path = config.CBIS_PATH
+    # cbis_path = f"{config.CBIS_PATH}_{i + 1}"
     print("cbis_path", cbis_path)
     output_path_images = os.path.join(config.CBIS_BASE_PATH, "output", "images")
     output_path_masks = os.path.join(config.CBIS_BASE_PATH, "output", "masks")
@@ -318,30 +318,30 @@ for i in range(33):
 
 
         # 6 Plotting
-        # print("Plotting")
-        # fig, ax = plt.subplots(nrows=5, ncols=len(arr), figsize=(22, 10))
-        #
-        # for i in range(len(arr)):
-        #     # Plot original image.
-        #     ax[0][i].imshow(arr[i], cmap="gray")
-        #     ax[0][i].set_title(f"{ds[i].PatientID}")
-        #
-        #     ax[1][i].imshow(cropped_img_list[i], cmap="gray")
-        #     ax[1][i].set_title("Cropped image")
-        #
-        #     ax[2][i].imshow(flipped_img_list[i], cmap="gray")
-        #     ax[2][i].set_title("Flipped image")
-        #
-        #     ax[3][i].imshow(padded_img_list[i], cmap="gray")
-        #     ax[3][i].set_title("padded image")
-        #
-        #     ax[4][i].imshow(preprocessed_img_list[i], cmap="gray")
-        #     ax[4][i].set_title("Preprocessed image")
-        #
-        #
-        # plt.tight_layout()
-        # plt.savefig(fname=os.path.join(output_path_images, "Plot.png"), dpi=300)
-        # plt.show()
+        print("Plotting")
+        fig, ax = plt.subplots(nrows=5, ncols=len(arr), figsize=(22, 10))
+
+        for i in range(len(arr)):
+            # Plot original image.
+            ax[0][i].imshow(arr[i], cmap="gray")
+            ax[0][i].set_title(f"{ds[i].PatientID}")
+
+            ax[1][i].imshow(cropped_img_list[i], cmap="gray")
+            ax[1][i].set_title("Cropped image")
+
+            ax[2][i].imshow(flipped_img_list[i], cmap="gray")
+            ax[2][i].set_title("Flipped image")
+
+            ax[3][i].imshow(padded_img_list[i], cmap="gray")
+            ax[3][i].set_title("padded image")
+
+            ax[4][i].imshow(preprocessed_img_list[i], cmap="gray")
+            ax[4][i].set_title("Preprocessed image")
+
+
+        plt.tight_layout()
+        plt.savefig(fname=os.path.join(output_path_images, "Plot.png"), dpi=300)
+        plt.show()
         #
         #
         # fig, ax = plt.subplots(nrows=5, ncols=len(arr_masks), figsize=(22, 10))
