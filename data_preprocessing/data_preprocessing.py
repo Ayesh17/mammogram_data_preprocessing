@@ -211,8 +211,22 @@ for i in range(33):
         resized_msk_list.append(resized_msk)
 
 
+    # Step 5 - Convert to RGB
+    print("COnverting to RGB")
+    rgb_img_list = []
 
-    # Step 5 - Generate outputs
+    for i in range(len(resized_img_list)):
+        binary_image = np.expand_dims(resized_img_list[i], axis=-1)
+
+        # Stack the single-channel array to create an RGB image by replicating the channel
+        rgb_image = np.concatenate([binary_image, binary_image, binary_image], axis=-1)
+        rgb_img_list.append(rgb_image)
+
+
+
+
+
+    # Step 6 - Generate outputs
     print("Generating outputs")
 
         # # if want the output in png format
@@ -301,7 +315,7 @@ for i in range(33):
 
     # if want the output in npy format
     # Loop through padded images and save as NumPy files
-    for i, img in enumerate(resized_img_list):
+    for i, img in enumerate(rgb_img_list):
         # Set the save path for the NumPy file
         save_path = os.path.join(output_path_images, f"{ds[i].PatientID}_pad.npy")
 
@@ -317,7 +331,7 @@ for i in range(33):
         np.save(save_path, img)
 
 
-        # 6 Plotting
+        # Step 7 Plotting
         print("Plotting")
         fig, ax = plt.subplots(nrows=5, ncols=len(arr), figsize=(22, 10))
 
@@ -335,7 +349,7 @@ for i in range(33):
             ax[3][i].imshow(padded_img_list[i], cmap="gray")
             ax[3][i].set_title("padded image")
 
-            ax[4][i].imshow(preprocessed_img_list[i], cmap="gray")
+            ax[4][i].imshow(rgb_img_list[i], cmap="gray")
             ax[4][i].set_title("Preprocessed image")
 
 
