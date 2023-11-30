@@ -41,6 +41,7 @@ def convert_npy_to_png(input_folder, output_folder):
     for npy_file in npy_files:
         npy_path = os.path.join(input_folder, npy_file)
         image_array = np.load(npy_path)
+        print("image_file", image_array.shape)
         # Normalize the pixel values to be in the range of 0 to 1
         image_array = (image_array - np.min(image_array)) / (np.max(image_array) - np.min(image_array))
 
