@@ -18,7 +18,7 @@ def convert_dicom_to_png_INbreast(dicom_folder, png_folder):
             file_path = os.path.join(dicom_folder, filename)
             print("Converting file : ", file_path)
             # Read the DICOM file
-            ds = pydicom.dcmread(file_path)
+            ds = pydicom.dcmread(file_path, force=True)
 
             # Normalize the pixel values to be between 0 and 1
             img = ds.pixel_array.astype(float)
@@ -47,7 +47,7 @@ def convert_dicom_to_png_CBIS(dicom_folder, png_folder):
                 os.makedirs(output_directory, exist_ok=True)
 
                 # Read the DICOM file
-                ds = pydicom.dcmread(file_path)
+                ds = pydicom.dcmread(file_path, force=True)
 
                 # Normalize the pixel values to be between 0 and 1
                 img = ds.pixel_array.astype(float)
@@ -66,8 +66,13 @@ dicom_folder_path_INbreast = os.path.join(config.INBREAST_PATH, "AllDICOMs")
 png_output_folder_path_INbreast = os.path.join(config.INBREAST_PATH, "Converted_PNG")
 
 # for CBID-DDSM
-dicom_folder_path_CBIS = config.CBIS_PATH
-png_output_folder_path_CBIS = os.path.join(config.CBIS_BASE_PATH, "Converted_PNG")
+# dicom_folder_path_CBIS = config.CBIS_PATH
+# png_output_folder_path_CBIS = os.path.join(config.CBIS_BASE_PATH, "Converted_PNG")
+
+cur_dir = os.getcwd()
+dicom_folder_path_CBIS = os.path.join(cur_dir, "data", "preprocessed_data")
+png_output_folder_path_CBIS = os.path.join(cur_dir, "data", "converted_pngs")
+
 
 if __name__ == '__main__':
 

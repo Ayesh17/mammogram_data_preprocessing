@@ -25,4 +25,4 @@ def rename_subfolders(dicom_folder):
 
 if __name__ == '__main__':
     # when using the CBIS-DDSM datset
-    rename_subfolders(config.CBIS_PATH)
+    rename_subfolders(config.CBIS_BASE_PATH)

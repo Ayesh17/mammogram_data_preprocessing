@@ -19,8 +19,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("device", device)
 
 
-for i in range(33):
-    print("Batch: ", i)
+for i in range(34):
+    print("Batch: ", i + 1)
     # cbis_path = config.CBIS_PATH
     cbis_path = f"{config.CBIS_PATH}_{i + 1}"
     print("cbis_path", cbis_path)
@@ -150,6 +150,53 @@ for i in range(33):
         own_masked_img_list.append(masked_img)
 
 
+    # # step 3.3 - Orientating the mammograms - Horizontal flip first AFTER removing pectoral muscle
+    # print("preprocessing Data")
+    # flipped_img_list = []
+    # flipped_msk_list = []
+    # padded_img_list = []
+    # padded_msk_list = []
+    # preprocessed_img_list = []
+    # preprocessed_msk_list = []
+    #
+    # for i in range(len(arr)):
+    #     # Plot flipped image.
+    #     horizontal_flip = HorizontalFlip(mask=X_largest_blobs_list[i])
+    #     if horizontal_flip:
+    #         flipped_img = np.fliplr(own_masked_img_list[i])
+    #         flipped_img_list.append(flipped_img) #flipped_img_list
+    #         padded_img = Pad(img=flipped_img)
+    #         padded_img_list.append(padded_img) #padded_img_list
+    #         re_flipped_img = np.fliplr(padded_img)
+    #         preprocessed_img_list.append(re_flipped_img) #preprocessed_img_list
+    #
+    #     else:
+    #         flipped_img_list.append(own_masked_img_list[i]) #flipped_img_list
+    #         padded_img = Pad(img=own_masked_img_list[i])
+    #         padded_img_list.append(padded_img) #padded_img_list
+    #         preprocessed_img_list.append(padded_img)  # preprocessed_img_list
+    #
+    #
+    # for i in range(len(arr_masks)):
+    #     # Plot flipped image.
+    #     horizontal_flip = HorizontalFlip(mask=cropped_msk_list[i])
+    #     if horizontal_flip:
+    #         flipped_msk = np.fliplr(cropped_msk_list[i])
+    #         flipped_msk_list.append(flipped_msk)  # flipped_msk_list
+    #         padded_msk = Pad(img=flipped_msk)
+    #         padded_msk_list.append(padded_msk)  # padded_msk_list
+    #         re_flipped_msk = np.fliplr(padded_msk)
+    #         preprocessed_msk_list.append(re_flipped_msk)  # preprocessed_msk_list
+    #
+    #     else:
+    #         flipped_msk_list.append(cropped_msk_list[i])  # flipped_msk_list
+    #         padded_msk = Pad(img=cropped_msk_list[i])
+    #         padded_msk_list.append(padded_msk)  # padded_msk_list
+    #         preprocessed_msk_list.append(padded_msk)  # preprocessed_msk_list
+    #
+    # print("preprocessed_img_list", len(preprocessed_img_list))
+    # print("preprocessed_msk_list", len(preprocessed_msk_list))
+
     # step 3.3 - Orientating the mammograms - Horizontal flip first AFTER removing pectoral muscle
     print("preprocessing Data")
     flipped_img_list = []
@@ -164,23 +211,11 @@ for i in range(33):
         horizontal_flip = HorizontalFlip(mask=X_largest_blobs_list[i])
         if horizontal_flip:
             flipped_img = np.fliplr(own_masked_img_list[i])
-            flipped_img_list.append(flipped_img) #flipped_img_list
+            flipped_img_list.append(flipped_img)  # flipped_img_list
             padded_img = Pad(img=flipped_img)
-            padded_img_list.append(padded_img) #padded_img_list
+            padded_img_list.append(padded_img)  # padded_img_list
             re_flipped_img = np.fliplr(padded_img)
-            preprocessed_img_list.append(re_flipped_img) #preprocessed_img_list
-
-        else:
-            flipped_img_list.append(own_masked_img_list[i]) #flipped_img_list
-            padded_img = Pad(img=own_masked_img_list[i])
-            padded_img_list.append(padded_img) #padded_img_list
-            preprocessed_img_list.append(padded_img)  # preprocessed_img_list
-
-
-    for i in range(len(arr_masks)):
-        # Plot flipped image.
-        horizontal_flip = HorizontalFlip(mask=cropped_msk_list[i])
-        if horizontal_flip:
+            preprocessed_img_list.append(re_flipped_img)  # preprocessed_img_list
             flipped_msk = np.fliplr(cropped_msk_list[i])
             flipped_msk_list.append(flipped_msk)  # flipped_msk_list
             padded_msk = Pad(img=flipped_msk)
@@ -189,11 +224,18 @@ for i in range(33):
             preprocessed_msk_list.append(re_flipped_msk)  # preprocessed_msk_list
 
         else:
+            flipped_img_list.append(own_masked_img_list[i])  # flipped_img_list
+            padded_img = Pad(img=own_masked_img_list[i])
+            padded_img_list.append(padded_img)  # padded_img_list
+            preprocessed_img_list.append(padded_img)  # preprocessed_img_list
             flipped_msk_list.append(cropped_msk_list[i])  # flipped_msk_list
             padded_msk = Pad(img=cropped_msk_list[i])
             padded_msk_list.append(padded_msk)  # padded_msk_list
             preprocessed_msk_list.append(padded_msk)  # preprocessed_msk_list
 
+
+    print("preprocessed_img_list", len(preprocessed_img_list))
+    print("preprocessed_msk_list", len(preprocessed_msk_list))
 
 
     # Step 4 - Resize all images in the padded_img_list to 256x256x3
@@ -211,16 +253,16 @@ for i in range(33):
         resized_msk_list.append(resized_msk)
 
 
-    # Step 5 - Convert to RGB
-    print("Converting to RGB")
-    rgb_img_list = []
-
-    for i in range(len(resized_img_list)):
-        binary_image = np.expand_dims(resized_img_list[i], axis=-1)
-
-        # Stack the single-channel array to create an RGB image by replicating the channel
-        rgb_image = np.concatenate([binary_image, binary_image, binary_image], axis=-1)
-        rgb_img_list.append(rgb_image)
+    # # Step 5 - Convert to RGB
+    # print("Converting to RGB")
+    # rgb_img_list = []
+    #
+    # for i in range(len(resized_img_list)):
+    #     binary_image = np.expand_dims(resized_img_list[i], axis=-1)
+    #
+    #     # Stack the single-channel array to create an RGB image by replicating the channel
+    #     rgb_image = np.concatenate([binary_image, binary_image, binary_image], axis=-1)
+    #     rgb_img_list.append(rgb_image)
 
 
 
@@ -315,7 +357,7 @@ for i in range(33):
 
     # if want the output in npy format
     # Loop through padded images and save as NumPy files
-    for i, img in enumerate(rgb_img_list):
+    for i, img in enumerate(resized_img_list):
         # Set the save path for the NumPy file
         save_path = os.path.join(output_path_images, f"{ds[i].PatientID}_pad.npy")
 
@@ -330,7 +372,7 @@ for i in range(33):
         # Save the image as a NumPy file
         np.save(save_path, img)
 
-        #
+
         # # Step 7 Plotting
         # print("Plotting")
         # fig, ax = plt.subplots(nrows=5, ncols=len(arr), figsize=(22, 10))
@@ -349,7 +391,7 @@ for i in range(33):
         #     ax[3][i].imshow(padded_img_list[i], cmap="gray")
         #     ax[3][i].set_title("padded image")
         #
-        #     ax[4][i].imshow(rgb_img_list[i], cmap="gray")
+        #     ax[4][i].imshow(resized_img_list[i], cmap="gray")
         #     ax[4][i].set_title("Preprocessed image")
         #
         #
@@ -380,6 +422,11 @@ for i in range(33):
         # plt.tight_layout()
         # plt.savefig(fname=os.path.join(output_path_masks, "Plot.png"), dpi=300)
         # plt.show()
+
+
+
+
+
 
         # # plotting
         # fig, ax = plt.subplots(nrows=11, ncols=len(arr), figsize=(22, 10))

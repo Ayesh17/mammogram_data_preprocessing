@@ -17,4 +17,4 @@ def remove_larger_dcm(dicom_folder):
                         os.remove(file_2)
 
 # Example usage:
-remove_larger_dcm(config.CBIS_PATH)
+remove_larger_dcm(config.CBIS_BASE_PATH)

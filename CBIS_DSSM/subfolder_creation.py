@@ -4,7 +4,7 @@ import config  # Import the module where CBIS_PATH is defined
 
 batch_size = 100  # Number of subfolders in each batch
 
-data_folder = config.CBIS_PATH  # Your main data folder containing subfolders
+data_folder = config.CBIS_BASE_PATH  # Your main data folder containing subfolders
 subfolders = [f.path for f in os.scandir(data_folder) if f.is_dir()]
 total_subfolders = len(subfolders)
 
